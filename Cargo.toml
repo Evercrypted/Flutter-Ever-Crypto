@@ -1,0 +1,17 @@
+[package]
+name = "flutter_ever_crypto"
+version = "0.1.2"
+edition = "2021"
+
+[lib]
+name = "flutter_ever_crypto"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Use the local ever-crypto crate
+ever-crypto = { path = "../ever-crypto" }
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort" 

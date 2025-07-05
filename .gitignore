@@ -1,0 +1,146 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+# Libraries should not include pubspec.lock, per https://dart.dev/guides/libraries/private-files#pubspeclock.
+/pubspec.lock
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+
+# Rust related
+target/
+**/*.rs.bk
+*.pdb
+
+# FFI generated files
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+
+# Platform-specific build artifacts
+# Android
+android/build/
+android/.gradle/
+android/gradle/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+android/app/build/
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+android/app/src/main/kotlin/io/flutter/plugins/GeneratedPluginRegistrant.kt
+
+# iOS
+ios/build/
+ios/Runner.xcworkspace/xcuserdata/
+ios/Runner.xcodeproj/xcuserdata/
+ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+ios/Pods/
+ios/Podfile.lock
+ios/Flutter/flutter_export_environment.sh
+ios/.symlinks/
+
+# macOS
+macos/build/
+macos/Runner.xcworkspace/xcuserdata/
+macos/Runner.xcodeproj/xcuserdata/
+macos/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+macos/Pods/
+macos/Podfile.lock
+macos/Flutter/ephemeral/
+macos/.symlinks/
+
+# Linux
+linux/build/
+linux/flutter/ephemeral/
+
+# Windows
+windows/build/
+windows/flutter/ephemeral/
+
+# Web
+web/build/
+
+# Coverage
+coverage/
+
+# Symbols
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# FFI bindings
+**/generated_bindings.dart
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Editor backups
+*~
+*.swp
+*.swo
+
+# Xcode
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Example app specific
+example/pubspec.lock
+example/build/
+example/.flutter-plugins
+example/.flutter-plugins-dependencies
+example/android/build/
+example/ios/build/
+example/linux/build/
+example/macos/build/
+example/windows/build/
