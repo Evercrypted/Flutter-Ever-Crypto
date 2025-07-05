@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 name = "flutter_ever_crypto"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 # Use the local ever-crypto crate

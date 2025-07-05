@@ -5,20 +5,41 @@
 Pod::Spec.new do |s|
   s.name             = 'flutter_ever_crypto'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter FFI plugin project.'
+  s.summary          = 'Flutter plugin for Ever Crypto - XChaCha20Poly1305 and Kyber1024 post-quantum cryptography'
   s.description      = <<-DESC
-A new Flutter FFI plugin project.
+A Flutter plugin that provides XChaCha20Poly1305 and Kyber1024 post-quantum cryptography through FFI bindings to the Rust ever-crypto library.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/evercrypted/flutter-ever-crypto'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Evercrypted' => 'contact@evercrypted.com' }
 
-  # This will ensure the source files in Classes/ are included in the native
-  # builds of apps using this FFI plugin. Podspec does not support relative
-  # paths, so Classes contains a forwarder C file that relatively imports
-  # `../src/*` so that the C sources can be shared among all target platforms.
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+
+  # Build the Rust library
+  s.script_phase = {
+    :name => 'Build Rust Library',
+    :script => <<-SCRIPT,
+      set -e
+      cd "${PODS_TARGET_SRCROOT}/.."
+      
+      # Build for macOS
+      if [[ "${ARCHS}" == *"arm64"* ]]; then
+        cargo build --release --target aarch64-apple-darwin
+        TARGET_DIR="target/aarch64-apple-darwin/release"
+      else
+        cargo build --release --target x86_64-apple-darwin
+        TARGET_DIR="target/x86_64-apple-darwin/release"
+      fi
+      
+      # Copy the library to the expected location
+      mkdir -p "${BUILT_PRODUCTS_DIR}"
+      cp "${TARGET_DIR}/libflutter_ever_crypto.dylib" "${BUILT_PRODUCTS_DIR}/libflutter_ever_crypto.dylib"
+SCRIPT
+    :execution_position => :before_compile
+  }
+
+  # Link the dynamic library
+  s.vendored_libraries = "libflutter_ever_crypto.dylib"
 
   # If your plugin requires a privacy manifest, for example if it collects user
   # data, update the PrivacyInfo.xcprivacy file to describe your plugin's
