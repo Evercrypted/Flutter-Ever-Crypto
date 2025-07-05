@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_ever_crypto'
-  s.version          = '0.0.1'
+  s.version          = '0.1.0'
   s.summary          = 'Flutter plugin for Ever Crypto - XChaCha20Poly1305 and Kyber1024 post-quantum cryptography'
   s.description      = <<-DESC
 A Flutter plugin that provides XChaCha20Poly1305 and Kyber1024 post-quantum cryptography through FFI bindings to the Rust ever-crypto library.
@@ -14,42 +14,21 @@ A Flutter plugin that provides XChaCha20Poly1305 and Kyber1024 post-quantum cryp
   s.author           = { 'Evercrypted' => 'contact@evercrypted.com' }
 
   s.source           = { :path => '.' }
-
-  # Build the Rust library
-  s.script_phase = {
-    :name => 'Build Rust Library',
-    :script => <<-SCRIPT,
-      set -e
-      cd "${PODS_TARGET_SRCROOT}/.."
-      
-      # Build for macOS
-      if [[ "${ARCHS}" == *"arm64"* ]]; then
-        cargo build --release --target aarch64-apple-darwin
-        TARGET_DIR="target/aarch64-apple-darwin/release"
-      else
-        cargo build --release --target x86_64-apple-darwin
-        TARGET_DIR="target/x86_64-apple-darwin/release"
-      fi
-      
-      # Copy the library to the expected location
-      mkdir -p "${BUILT_PRODUCTS_DIR}"
-      cp "${TARGET_DIR}/libflutter_ever_crypto.dylib" "${BUILT_PRODUCTS_DIR}/libflutter_ever_crypto.dylib"
-SCRIPT
-    :execution_position => :before_compile
-  }
-
-  # Link the dynamic library
-  s.vendored_libraries = "libflutter_ever_crypto.dylib"
-
-  # If your plugin requires a privacy manifest, for example if it collects user
-  # data, update the PrivacyInfo.xcprivacy file to describe your plugin's
-  # privacy impact, and then uncomment this line. For more information,
-  # see https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
-  # s.resource_bundles = {'flutter_ever_crypto_privacy' => ['Resources/PrivacyInfo.xcprivacy']}
-
+  s.source_files     = 'Classes/**/*'
   s.dependency 'FlutterMacOS'
+  s.platform = :osx, '10.14'
 
-  s.platform = :osx, '10.11'
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
+  # CargoKit integration
+  s.script_phase = {
+    :name => 'Build Rust library',
+    :script => 'sh "$PODS_TARGET_SRCROOT/../cargokit/build_pod.sh" ../rust flutter_ever_crypto',
+    :execution_position => :before_compile,
+    :input_files => ['${BUILT_PRODUCTS_DIR}/cargokit_phony'],
+    :output_files => ["${BUILT_PRODUCTS_DIR}/libflutter_ever_crypto.a"],
+  }
+  s.pod_target_xcconfig = {
+    'DEFINES_MODULE' => 'YES',
+    'OTHER_LDFLAGS' => '-force_load ${BUILT_PRODUCTS_DIR}/libflutter_ever_crypto.a',
+  }
   s.swift_version = '5.0'
 end

@@ -61,3 +61,11 @@ android {
         minSdk = 21
     }
 }
+
+// Apply CargoKit integration
+apply from: "../cargokit/gradle/plugin.gradle"
+
+cargokit {
+    manifestDir = "../rust"
+    libname = "flutter_ever_crypto"
+}

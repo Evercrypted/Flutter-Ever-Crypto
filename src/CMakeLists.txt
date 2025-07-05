@@ -5,61 +5,27 @@ cmake_minimum_required(VERSION 3.10)
 
 project(flutter_ever_crypto_library VERSION 0.0.1 LANGUAGES C)
 
-# Set the path to the parent directory (where Cargo.toml is located)
-set(CRATE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/..")
+# Use CargoKit to build the Rust library
+set(CARGOKIT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../cargokit")
+set(RUST_CRATE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../rust")
 
-# Determine the target architecture for Android
-if(ANDROID)
-    if(CMAKE_ANDROID_ARCH_ABI STREQUAL "arm64-v8a")
-        set(RUST_TARGET "aarch64-linux-android")
-    elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "armeabi-v7a")
-        set(RUST_TARGET "armv7-linux-androideabi")
-    elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "x86")
-        set(RUST_TARGET "i686-linux-android")
-    elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "x86_64")
-        set(RUST_TARGET "x86_64-linux-android")
-    else()
-        message(FATAL_ERROR "Unsupported Android ABI: ${CMAKE_ANDROID_ARCH_ABI}")
-    endif()
-    
-    set(RUST_LIB_PATH "${CRATE_DIR}/target/${RUST_TARGET}/release/libflutter_ever_crypto.so")
-    set(CARGO_BUILD_TARGET "--target=${RUST_TARGET}")
-else()
-    # For other platforms, use the default target
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(RUST_LIB_PATH "${CRATE_DIR}/target/debug/libflutter_ever_crypto.so")
-        set(CARGO_BUILD_PROFILE "")
-    else()
-        set(RUST_LIB_PATH "${CRATE_DIR}/target/release/libflutter_ever_crypto.so")
-        set(CARGO_BUILD_PROFILE "--release")
-    endif()
-    set(CARGO_BUILD_TARGET "")
-endif()
+# Include CargoKit cmake module
+include("${CARGOKIT_ROOT}/cmake/cargokit.cmake")
 
-# Build the Rust library
-add_custom_command(
-    OUTPUT ${RUST_LIB_PATH}
-    COMMAND cargo build ${CARGO_BUILD_PROFILE} ${CARGO_BUILD_TARGET}
-    WORKING_DIRECTORY ${CRATE_DIR}
-    COMMENT "Building Rust library"
-    VERBATIM
+# Build the Rust library using CargoKit
+apply_cargokit(flutter_ever_crypto "${RUST_CRATE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}")
+
+# Create the library target
+add_library(flutter_ever_crypto SHARED
+  "flutter_ever_crypto.c"
 )
 
-# Create a custom target that depends on the Rust library
-add_custom_target(rust_lib ALL DEPENDS ${RUST_LIB_PATH})
+# Link the Rust library
+target_link_libraries(flutter_ever_crypto flutter_ever_crypto_rust)
 
-# Create an imported library target
-add_library(flutter_ever_crypto SHARED IMPORTED GLOBAL)
-add_dependencies(flutter_ever_crypto rust_lib)
-
-# Set the imported library location
 set_target_properties(flutter_ever_crypto PROPERTIES
-    IMPORTED_LOCATION ${RUST_LIB_PATH}
+  PUBLIC_HEADER flutter_ever_crypto.h
+  OUTPUT_NAME "flutter_ever_crypto"
 )
 
-if (ANDROID)
-  # Support Android 15 16k page size
-  set_target_properties(flutter_ever_crypto PROPERTIES
-    IMPORTED_LINK_INTERFACE_LIBRARIES "-Wl,-z,max-page-size=16384"
-  )
-endif()
+target_compile_definitions(flutter_ever_crypto PUBLIC DART_SHARED_LIB)

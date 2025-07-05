@@ -8,8 +8,8 @@ name = "flutter_ever_crypto"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-# Use the local ever-crypto crate
-ever-crypto = { path = "../ever-crypto" }
+# Use the published ever-crypto crate from crates.io
+ever-crypto = "0.1.0"
 
 [profile.release]
 lto = true

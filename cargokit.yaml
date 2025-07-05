@@ -1,0 +1,31 @@
+# CargoKit configuration for flutter_ever_crypto
+# This file specifies how to build the Rust library
+
+# The name of the package
+package_name: flutter_ever_crypto
+
+# The path to the Rust crate relative to this file
+rust_crate_path: rust
+
+# Build options
+build_options:
+  # Enable LTO for release builds
+  lto: true
+  # Single codegen unit for smaller binaries
+  codegen_units: 1
+  # Abort on panic for smaller binaries
+  panic: abort
+
+# Platform-specific configuration
+platforms:
+  android:
+    # Android NDK API level
+    android_api_level: 21
+    
+  ios:
+    # iOS deployment target
+    ios_deployment_target: "12.0"
+    
+  macos:
+    # macOS deployment target
+    macos_deployment_target: "10.14" 

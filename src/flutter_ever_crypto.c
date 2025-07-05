@@ -1,3 +1,7 @@
+// C stub file for flutter_ever_crypto
+// This file provides a minimal C interface that links with the Rust library
+// The actual implementations are in the Rust code
+
 #include "flutter_ever_crypto.h"
 
 // A very short-lived native function.
@@ -20,4 +24,11 @@ FFI_PLUGIN_EXPORT int sum_long_running(int a, int b) {
   usleep(5000 * 1000);
 #endif
   return a + b;
+}
+
+// This is a minimal C stub that allows the library to be loaded
+// The actual FFI functions are implemented in Rust and will be linked in
+void flutter_ever_crypto_init(void) {
+    // This function is called when the library is loaded
+    // The Rust FFI functions will be available through the dynamic library
 }
