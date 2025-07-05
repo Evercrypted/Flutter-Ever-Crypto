@@ -63,57 +63,51 @@ final class FFIKyberEncapsulateResult extends Struct {
 typedef FFIKeyResultNative = FFIKeyResult Function();
 typedef FFIKeyResultDart = FFIKeyResult Function();
 
-typedef FFIEncryptNative =
-    FFIDataResult Function(
-      Pointer<Uint8> keyPtr,
-      Size keyLen,
-      Pointer<Uint8> noncePtr,
-      Size nonceLen,
-      Pointer<Uint8> plaintextPtr,
-      Size plaintextLen,
-      Pointer<Uint8> aadPtr,
-      Size aadLen,
-    );
-typedef FFIEncryptDart =
-    FFIDataResult Function(
-      Pointer<Uint8> keyPtr,
-      int keyLen,
-      Pointer<Uint8> noncePtr,
-      int nonceLen,
-      Pointer<Uint8> plaintextPtr,
-      int plaintextLen,
-      Pointer<Uint8> aadPtr,
-      int aadLen,
-    );
+typedef FFIEncryptNative = FFIDataResult Function(
+  Pointer<Uint8> keyPtr,
+  Size keyLen,
+  Pointer<Uint8> noncePtr,
+  Size nonceLen,
+  Pointer<Uint8> plaintextPtr,
+  Size plaintextLen,
+  Pointer<Uint8> aadPtr,
+  Size aadLen,
+);
+typedef FFIEncryptDart = FFIDataResult Function(
+  Pointer<Uint8> keyPtr,
+  int keyLen,
+  Pointer<Uint8> noncePtr,
+  int nonceLen,
+  Pointer<Uint8> plaintextPtr,
+  int plaintextLen,
+  Pointer<Uint8> aadPtr,
+  int aadLen,
+);
 
 typedef FFIKyberKeyPairNative = FFIKyberKeyPair Function();
 typedef FFIKyberKeyPairDart = FFIKyberKeyPair Function();
 
-typedef FFIKyberEncapsulateNative =
-    FFIKyberEncapsulateResult Function(
-      Pointer<Uint8> publicKeyPtr,
-      Size publicKeyLen,
-    );
-typedef FFIKyberEncapsulateDart =
-    FFIKyberEncapsulateResult Function(
-      Pointer<Uint8> publicKeyPtr,
-      int publicKeyLen,
-    );
+typedef FFIKyberEncapsulateNative = FFIKyberEncapsulateResult Function(
+  Pointer<Uint8> publicKeyPtr,
+  Size publicKeyLen,
+);
+typedef FFIKyberEncapsulateDart = FFIKyberEncapsulateResult Function(
+  Pointer<Uint8> publicKeyPtr,
+  int publicKeyLen,
+);
 
-typedef FFIKyberDecapsulateNative =
-    FFIDataResult Function(
-      Pointer<Uint8> ciphertextPtr,
-      Size ciphertextLen,
-      Pointer<Uint8> secretKeyPtr,
-      Size secretKeyLen,
-    );
-typedef FFIKyberDecapsulateDart =
-    FFIDataResult Function(
-      Pointer<Uint8> ciphertextPtr,
-      int ciphertextLen,
-      Pointer<Uint8> secretKeyPtr,
-      int secretKeyLen,
-    );
+typedef FFIKyberDecapsulateNative = FFIDataResult Function(
+  Pointer<Uint8> ciphertextPtr,
+  Size ciphertextLen,
+  Pointer<Uint8> secretKeyPtr,
+  Size secretKeyLen,
+);
+typedef FFIKyberDecapsulateDart = FFIDataResult Function(
+  Pointer<Uint8> ciphertextPtr,
+  int ciphertextLen,
+  Pointer<Uint8> secretKeyPtr,
+  int secretKeyLen,
+);
 
 typedef FFIFreeBytesNative = Void Function(Pointer<Uint8> ptr, Size len);
 typedef FFIFreeBytesDart = void Function(Pointer<Uint8> ptr, int len);
@@ -147,49 +141,67 @@ class EverCrypto {
   static void init() {
     if (_dylib != null) return; // Already initialized
 
-    _dylib = _loadLibrary();
+    try {
+      _dylib = _loadLibrary();
 
-    // Bind functions
-    _xchachaGenerateKey = _dylib!
-        .lookup<NativeFunction<FFIKeyResultNative>>('xchacha_generate_key')
-        .asFunction();
-    _xchachaGenerateNonce = _dylib!
-        .lookup<NativeFunction<FFIKeyResultNative>>('xchacha_generate_nonce')
-        .asFunction();
-    _xchachaEncrypt = _dylib!
-        .lookup<NativeFunction<FFIEncryptNative>>('xchacha_encrypt')
-        .asFunction();
-    _xchachaDecrypt = _dylib!
-        .lookup<NativeFunction<FFIEncryptNative>>('xchacha_decrypt')
-        .asFunction();
-    _kyberGenerateKeypair = _dylib!
-        .lookup<NativeFunction<FFIKyberKeyPairNative>>('kyber_generate_keypair')
-        .asFunction();
-    _kyberEncapsulate = _dylib!
-        .lookup<NativeFunction<FFIKyberEncapsulateNative>>('kyber_encapsulate')
-        .asFunction();
-    _kyberDecapsulate = _dylib!
-        .lookup<NativeFunction<FFIKyberDecapsulateNative>>('kyber_decapsulate')
-        .asFunction();
-    _freeBytes = _dylib!
-        .lookup<NativeFunction<FFIFreeBytesNative>>('free_bytes')
-        .asFunction();
+      // Bind functions
+      _xchachaGenerateKey = _dylib!
+          .lookup<NativeFunction<FFIKeyResultNative>>('xchacha_generate_key')
+          .asFunction();
+      _xchachaGenerateNonce = _dylib!
+          .lookup<NativeFunction<FFIKeyResultNative>>('xchacha_generate_nonce')
+          .asFunction();
+      _xchachaEncrypt = _dylib!
+          .lookup<NativeFunction<FFIEncryptNative>>('xchacha_encrypt')
+          .asFunction();
+      _xchachaDecrypt = _dylib!
+          .lookup<NativeFunction<FFIEncryptNative>>('xchacha_decrypt')
+          .asFunction();
+      _kyberGenerateKeypair = _dylib!
+          .lookup<NativeFunction<FFIKyberKeyPairNative>>(
+              'kyber_generate_keypair')
+          .asFunction();
+      _kyberEncapsulate = _dylib!
+          .lookup<NativeFunction<FFIKyberEncapsulateNative>>(
+              'kyber_encapsulate')
+          .asFunction();
+      _kyberDecapsulate = _dylib!
+          .lookup<NativeFunction<FFIKyberDecapsulateNative>>(
+              'kyber_decapsulate')
+          .asFunction();
+      _freeBytes = _dylib!
+          .lookup<NativeFunction<FFIFreeBytesNative>>('free_bytes')
+          .asFunction();
+    } catch (e) {
+      throw EverCryptoException(
+        'Failed to initialize flutter_ever_crypto: ${e.toString()}',
+        FFIError.memoryError,
+      );
+    }
   }
 
   static DynamicLibrary _loadLibrary() {
     const libName = 'flutter_ever_crypto';
 
-    if (Platform.isIOS || Platform.isMacOS) {
-      return DynamicLibrary.executable();
-    } else if (Platform.isAndroid) {
-      return DynamicLibrary.open('lib$libName.so');
-    } else if (Platform.isLinux) {
-      return DynamicLibrary.open('lib$libName.so');
-    } else if (Platform.isWindows) {
-      return DynamicLibrary.open('$libName.dll');
-    } else {
-      throw UnsupportedError(
-        'Unsupported platform: ${Platform.operatingSystem}',
+    try {
+      if (Platform.isIOS || Platform.isMacOS) {
+        return DynamicLibrary.executable();
+      } else if (Platform.isAndroid) {
+        return DynamicLibrary.open('lib$libName.so');
+      } else if (Platform.isLinux) {
+        return DynamicLibrary.open('lib$libName.so');
+      } else if (Platform.isWindows) {
+        return DynamicLibrary.open('$libName.dll');
+      } else {
+        throw UnsupportedError(
+          'Unsupported platform: ${Platform.operatingSystem}',
+        );
+      }
+    } catch (e) {
+      throw Exception(
+        'Failed to load flutter_ever_crypto native library on ${Platform.operatingSystem}. '
+        'Make sure the library is properly built and included in your app. '
+        'Error: ${e.toString()}',
       );
     }
   }

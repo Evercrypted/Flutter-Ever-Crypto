@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+* Fix FFI initialization error that caused "LateInitializationError" when using the plugin
+* Improved error handling and messages for library loading failures
+* Better debugging information when native library fails to load
+
 ## 0.1.2
 
 * Initial release with XChaCha20Poly1305 and Kyber1024 support
