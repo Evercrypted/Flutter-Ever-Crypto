@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.4
+
+* **BREAKING**: Integrated CargoKit for proper cross-platform Rust builds
+* Fixed Android build issues with proper NDK cross-compilation
+* Resolved library conflicts between flutter_ever_crypto and rhttp
+* Updated to use published ever-crypto 0.1.0 from crates.io
+* Improved build system with automatic platform-specific compilation
+* Added support for all Android architectures (arm64-v8a, armeabi-v7a, x86, x86_64)
+
 ## 0.1.3
 
 * Fix FFI initialization error that caused "LateInitializationError" when using the plugin

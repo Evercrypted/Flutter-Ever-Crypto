@@ -1,6 +1,6 @@
 name: flutter_ever_crypto
 description: "Flutter plugin for Ever Crypto - XChaCha20Poly1305 and Kyber1024 post-quantum cryptography"
-version: 0.1.3
+version: 0.1.4
 homepage: https://github.com/evercrypted/flutter-ever-crypto
 repository: https://github.com/evercrypted/flutter-ever-crypto
 issue_tracker: https://github.com/evercrypted/flutter-ever-crypto/issues
